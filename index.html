@@ -72,6 +72,7 @@
   <div id='console'>
     <h1>Motor vehicle collisions</h1>
     <p>Data: <a href='https://data.cityofnewyork.us/Public-Safety/NYPD-Motor-Vehicle-Collisions/h9gi-nx95'>Motor vehicle collision injuries and deaths</a> in NYC, Jan 2016</p>
+
     <div class='session'>
       <h2>Casualty</h2>
       <div class='row colors'></div>
@@ -84,6 +85,12 @@
         <div class='label'>5+</div>
       </div>
     </div>
+
+    <div class='session' id='sliderbar'>
+      <h2>Hour: <label id='active-hour'>12PM</label></h2>
+      <input id='slider' class='row' type='range' min='0' max='23' step='1' value='12' />
+    </div>
+
   </div>
 
 
@@ -127,6 +134,20 @@
           'circle-opacity': 0.8
         }
       }, 'admin-2-boundaries-dispute');
+
+      document.getElementById('slider').addEventListener('input', function(e) {
+      var hour = parseInt(e.target.value);
+      // update the map
+      map.setFilter('collisions', ['==', ['number', ['get', 'Hour']], hour]);
+
+      // converting 0-23 hour to AMPM format
+      var ampm = hour >= 12 ? 'PM' : 'AM';
+      var hour12 = hour % 12 ? hour % 12 : 12;
+
+      // update text in the UI
+      document.getElementById('active-hour').innerText = hour12 + ampm;
+      });
+
     });
 
 
