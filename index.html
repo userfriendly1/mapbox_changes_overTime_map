@@ -91,6 +91,18 @@
       <input id='slider' class='row' type='range' min='0' max='23' step='1' value='12' />
     </div>
 
+    <div class='session'>
+      <h2>Day of the week</h2>
+      <div class='row' id='filters'>
+        <input id='all' type='radio' name='toggle' value='all' checked='checked'>
+        <label for='all'>All</label>
+        <input id='weekday' type='radio' name='toggle' value='weekday'>
+        <label for='weekday'>Weekday</label>
+        <input id='weekend' type='radio' name='toggle' value='weekend'>
+        <label for='weekend'>Weekend</label>
+      </div>
+    </div>
+
   </div>
 
 
@@ -147,6 +159,21 @@
       // update text in the UI
       document.getElementById('active-hour').innerText = hour12 + ampm;
       });
+
+      document.getElementById('filters').addEventListener('change', function(e) {
+        var day = e.target.value;
+        // update the map filter
+        if (day === 'all') {
+          filterDay = ['!=', ['string', ['get', 'Day']], 'placeholder'];
+        } else if (day === 'weekday') {
+          filterDay = ['match', ['get', 'Day'], ['Sat', 'Sun'], false, true];
+        } else if (day === 'weekend') {
+          filterDay = ['match', ['get', 'Day'], ['Sat', 'Sun'], true, true];
+        } else {
+          console.log('error');
+        }
+        map.setFilter('collisions', ['all', filterDay]);
+});
 
     });
 
